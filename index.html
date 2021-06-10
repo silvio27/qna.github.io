@@ -1,5 +1,3 @@
-<!--学习记录 https://v3.cn.vuejs.org/guide/events.html#%E4%BA%8B%E4%BB%B6%E4%BF%AE%E9%A5%B0%E7%AC%A6-->
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,262 +5,37 @@
     <title>MyPage</title>
     <script src="https://unpkg.com/vue@next"></script>
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <!-- 引入样式 -->
+    <link rel="stylesheet" href="https://unpkg.com/element-plus/lib/theme-chalk/index.css">
+    <!-- 引入组件库 -->
+    <script src="https://unpkg.com/element-plus/lib/index.full.js"></script>
 </head>
 <body>
-<div id="app"></div>
+<div>
+    <div id="app"></div>
+    <div id="bpp">
+        <el-button type="danger" @click="handleClick">{{ message }}</el-button>
+    </div>
+
+</div>
 
 </body>
 
 <script>
 
-    // 显示当下的时间 ###局部组件###
-    const showtime = {
-        data() {
+    const App = {
+        data(){
             return {
-                localtime: ''
+                message:'PartA'
             }
         },
-        methods: {
-            showNow() {
-                this.localtime = new Date().toLocaleString()
-            }
-        },
-        mounted() {
-            setInterval(() => {
-                this.showNow()
-            }, 1000)
-        },
-        template: `
-          <div style="border: coral 1px solid;text-align: center;position: absolute;bottom:0;right:0;padding: 10px">
-          <b>{{ localtime }}</b>
-          </div>`
-    }
-
-
-    const app = Vue.createApp({
-        components: {
-            st: showtime
-        },
-        data() {
-            return {
-                tip: '这是一段提示信息',
-                toSon: '这是父亲给儿子的信息',
-                message: ['啊啊啊啊啊啊'],
-                backdata: '',
-                postFontSize: 1
-            }
-        },
-        methods: {
-            handleClick() {
-                alert('提醒！！！')
-            },
-            enlargett(e = 0) {
-                this.postFontSize = this.postFontSize + e
-            }
-        },
-        mounted() {
-
-        },
-        template: `
-          <h1 :title="tip">我的主页</h1>
-          <back-url-data />
-
+        template:`
+          <h1>{{message}}</h1>
+          <item_name>插入的内容</item_name>
         `
-    })
+    };
 
-    // v-model双向绑定
-    app.component('doublebind', {
-        data() {
-            return {
-                message: '',
-            }
-        },
-        methods: {
-            submit_show_alert() {
-                alert(this.message)
-            },
-            clearspace() {
-                this.message = ''
-            }
-        },
-        template: `
-          <div class="acpt">
-          <h2>## 实现双向数据绑定:&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp按回车出现提醒你，按shift+command内容清空</h2>
-          <input type="text" v-model.trim="message" placeholder="内容双向绑定" @keydown.enter="submit_show_alert"
-                 @keydown.meta.shift="clearspace">
-          <div>{{ message }}</div>
-          </div>
-
-        `,
-
-    })
-
-    // v-if
-    app.component('showcpt', {
-        data() {
-            return {
-                showtext: true
-            }
-        },
-        methods: {
-            showOrHide() {
-                this.showtext = !this.showtext
-            },
-        },
-        template: `
-          <div class="acpt">
-          <button @click="showOrHide">显示or隐藏</button>
-          <span v-if="showtext">显示or隐藏</span>
-          </div>
-        `,
-
-    })
-
-    // v-for
-    app.component('showlists', {
-        data() {
-            return {
-                mylists: ['Vue', 'Python', 'Git'],
-                // mydicts: [{text: 'Vue'}, {text: 'Python'}, {text: 'Git'}],
-                // {{ item.text }}
-                // 显示字典内的信息
-                mydicts: {name: 'zhangsan', gender: 'male', age: "30"}
-            }
-        },
-        methods: {},
-        template: `
-          <div class="acpt">
-          <h2>v-for dict循环</h2>
-          <ul v-for="(value,name,index) in mydicts" type="square">
-            <li>{{ index }}.{{ name }} : {{ value }}</li>
-          </ul>
-          </div>
-        `,
-    })
-
-    // 获得父亲的数据
-    app.component('getfromdad', {
-        props: {
-            'message': String,
-        },
-        emits: ['enlarge-text'],
-        data() {
-            return {}
-        },
-        methods: {},
-        template: `
-          <div class="acpt">
-          <p>{{ message }}</p>
-          <button @click="$emit('enlarge-text',1.1)">baccccc</button>
-          </div>
-        `,
-    })
-
-    // slot功能
-    app.component('test_slot', {
-        props: [],
-        data() {
-            return {
-                item: ''
-            }
-        },
-        methods: {
-            doNothing(event) {
-                console.log(event.target)
-            }
-        },
-        mounted() {
-        },
-        template: `
-          <div class="acpt" >
-              <span>显示slot</span>
-              <span style="color: red">
-                <slot></slot>
-              </span>
-          </div>
-        `,
-    })
-
-
-    // 后台交互
-    app.component('BackUrlData', {
-        props: [],
-        data() {
-            return {
-                answer: '',
-                picurl: '',
-                localback: ''
-            }
-        },
-        methods: {
-            getAnswer() {
-                // this.answer = "Thinking……"
-                axios.get('https://yesno.wtf/api')
-                    .then(response => {
-                        this.answer = response.data.answer
-                        this.picurl = response.data.image
-                        console.log(response.data)
-                    })
-                    .catch(error => {
-                        this.answer = 'Error! Could not reach the API. ' + error
-                        alert(this.answer)
-                    })
-            },
-            getlocalAnswer(linkitem = '') {
-                // this.answer = "Thinking……"
-                axios.get('https://silvio27.github.io/demo01/' + linkitem)
-                    .then(response => {
-                        console.log(response.data)
-                        this.localback = response.data
-                    })
-                    .catch(error => {
-                        this.localback = 'Error'
-                        // alert(this.localback)
-                    })
-            },
-        },
-        mounted() {
-            this.getAnswer()
-            this.getlocalAnswer('data.json')
-        },
-        template: `
-          <div class="acpt">
-          <h1 v-for="(value,name) in localback">{{ name }}:{{ value }}</h1>
-          <h2 @click="getAnswer">点击我决定是否可以继续下一步：{{ answer }}</h2>
-          <img :src="picurl" style="position:fixed;bottom: 0;right:0;padding:100px">
-          </div>
-        `,
-    })
-
-
-    // watch 新获得的数据命名中要有一个字母大写，如nEw
-    app.component('WatchNew', {
-        props: [],
-        data() {
-            return {
-                message: '',
-                plmessage: '字符长度超过3个会alert'
-            }
-        },
-        watch: {
-            message(nEw, od) {
-                if (nEw.length > 3) {
-                    alert(nEw)
-                }
-
-            },
-        },
-        methods: {},
-        mounted() {
-        },
-        template: `
-          <div class="acpt">
-          <input type="text" v-model="message" :placeholder="plmessage">
-          </div>
-        `,
-    })
-
-
+    const app = Vue.createApp(App);
     // 组件模板
     app.component('item_name', {
         props: [],
@@ -279,16 +52,35 @@
         mounted() {
         },
         template: `
-          <div class="acpt">
 
+          <div class="acpt">
+              <slot></slot>
           </div>
+
         `,
     })
 
 
-    const vm = app.mount('#app')
+    app.use(ElementPlus);
+    const vm = app.mount('#app');
 
 
+    const Bpp = {
+        data() {
+            return {
+                message: "点我",
+            };
+        },
+        methods: {
+            handleClick() {
+                alert('Hello World')
+            }
+        }
+    };
+
+    const bpp = Vue.createApp(Bpp);
+    bpp.use(ElementPlus);
+    bpp.mount("#bpp");
 </script>
 
 <style>
