@@ -1,41 +1,77 @@
 #!/usr/bin/python3
-# -*- coding: utf-8 -*-
+# -*- coding: gbk -*-
 # @Time    : 2021/6/11 17:03
 # @Author  : Silvio27
 # @Email   : silviosun@outlook.com
 # @File    : main.py
 # @Software: PyCharm
 
+import json
+import uuid
+
+
 def addtodata():
-    data = {
-        'id': '',  # * é—®é¢˜id [è‡ªåŠ¨ç”Ÿæˆ]
-        'title': '',  # * åç§°
-        'describe': '',  # ç®€è¦æè¿°
+    datatotal = {
+        'id': '',  # * ÎÊÌâid [×Ô¶¯Éú³É]
+        'title': '',  # * Ãû³Æ
+        'describe': '',  # ¼òÒªÃèÊö
         'content': {
             'text': '',
             'pic': {
                 'title': '',
                 'describe': '',
-                'urls': []  # å¦‚æœå¤šå¼ å›¾ç‰‡å³åšè½®æ’­
+                'urls': []  # Èç¹û¶àÕÅÍ¼Æ¬¼´×öÂÖ²¥
             }
-        },  # å®Œæ•´å†…å®¹,æ’ç‰ˆé—®é¢˜å¦‚ä½•è§£å†³?ç±»ä¼¼è§ä¸‹å›¾?
-        'ref': '',  # é—®é¢˜æ¥æº
-        'create_time': '',  # * åˆ›å»ºæ—¶é—´
-        'update_time': '',  # * æœ€æ–°ç­”æ¡ˆæ·»åŠ çš„æ—¶é—´
-        'comments': [],  # comment å¯ä»¥æ·»åŠ å¾ˆå¤šcomment[id] = data,è¿™é‡Œå³æ€è€ƒæ˜¯å¦é—®é¢˜å³ç­”æ¡ˆ?
+        },  # ÍêÕûÄÚÈİ,ÅÅ°æÎÊÌâÈçºÎ½â¾ö?ÀàËÆ¼ûÏÂÍ¼?
+        'ref': '',  # ÎÊÌâÀ´Ô´
+        'create_time': '',  # * ´´½¨Ê±¼ä
+        'update_time': '',  # * ×îĞÂ´ğ°¸Ìí¼ÓµÄÊ±¼ä
+        'comments': [],  # comment ¿ÉÒÔÌí¼ÓºÜ¶àcomment[id] = data,ÕâÀï¼´Ë¼¿¼ÊÇ·ñÎÊÌâ¼´´ğ°¸?
         'tags': [],  # push tag_id
-        'isTodo': False,  # é€‰æ‹©æ˜¯å¦æ˜¯ä¸€ä¸ªä»£åŠäº‹é¡¹?checkbox é»˜è®¤false
-        'status': False,  # æ˜¯å¦å·²å®Œæˆ [å¾…å›ç­”,å·²å…³é—­??# ] é»˜è®¤false
-        'created_by_id': [],  # è‡ªåŠ¨æ·»åŠ çˆ¶äº²çº§id,ç”±ä½•è€Œæ¥,å¯èƒ½æœ‰å¤šä¸ªé¢˜ç›®è”åˆåˆ›é€ çš„é¢˜ç›®,å³å¤šé€‰,é€‰æ‹©æ·»åŠ ç­”æ¡ˆ
-        'create_person': '',  # *è°åˆ›å»º
-        'managers': [],  # è°è´Ÿè´£
-        'operators': [],  # è°æ‰§è¡Œ
-        'inspectors': [],  # è°æŸ¥çœ‹
-        'isShow': True,  # æ˜¯å¦æ˜¾ç¤º
-        'isAlert': False,  # æ˜¯å¦è¦æœ‰æé†’åŠŸèƒ½?
-        'alertTime': '',  # æé†’æ—¶é—´ æ€è€ƒæé†’çš„æ–¹å¼,ç›´æ¥ç½‘é¡µå¼¹å‡º?
+        'isTodo': False,  # Ñ¡ÔñÊÇ·ñÊÇÒ»¸ö´ú°ìÊÂÏî?checkbox Ä¬ÈÏfalse
+        'status': False,  # ÊÇ·ñÒÑÍê³É [´ı»Ø´ğ,ÒÑ¹Ø±Õ??# ] Ä¬ÈÏfalse
+        'created_by_id': [],  # ×Ô¶¯Ìí¼Ó¸¸Ç×¼¶id,ÓÉºÎ¶øÀ´,¿ÉÄÜÓĞ¶à¸öÌâÄ¿ÁªºÏ´´ÔìµÄÌâÄ¿,¼´¶àÑ¡,Ñ¡ÔñÌí¼Ó´ğ°¸
+        'create_person': '',  # *Ë­´´½¨
+        'managers': [],  # Ë­¸ºÔğ
+        'operators': [],  # Ë­Ö´ĞĞ
+        'inspectors': [],  # Ë­²é¿´
+        'isShow': True,  # ÊÇ·ñÏÔÊ¾
+        'isAlert': False,  # ÊÇ·ñÒªÓĞÌáĞÑ¹¦ÄÜ?
+        'alertTime': '',  # ÌáĞÑÊ±¼ä Ë¼¿¼ÌáĞÑµÄ·½Ê½,Ö±½ÓÍøÒ³µ¯³ö?
     }
+
+    data = {
+        'id': '',  # * ÎÊÌâid [×Ô¶¯Éú³É]
+        'title': '',  # * Ãû³Æ
+        'comments': [],  # comment ¿ÉÒÔÌí¼ÓºÜ¶àcomment[id] = data,ÕâÀï¼´Ë¼¿¼ÊÇ·ñÎÊÌâ¼´´ğ°¸?
+        'tags': [],  # push tag_id tag½øÈëtag¿â,·µ»Øidµ½Õâ±ß
+    }
+    datum = []
+
+
+def dict2json(datum):
+    return json.dumps(datum, ensure_ascii=False)
 
 
 if __name__ == '__main__':
-    print('hello')
+    data = {
+        '1': {
+            'title': 'ÎÒµÄµÚÒ»¸öÎÊÌâ?',
+            'comments': [2,3],
+            'tags': [],
+
+        },
+        '2': {
+            'title': 'ÎÒµÄµÚÒ»¸ö»Ø´ğ',
+            'comments': [],
+            'tags': [],
+
+        },
+        '3': {
+            'title': 'ÎÒµÄµÚ2¸öÎÊÌâ?',
+            'comments': [],
+            'tags': [],
+
+        }
+    }
+    print(dict2json(data))
