@@ -12,11 +12,17 @@
 </head>
 <body>
 <div style="text-align: center">
-    <div id="app" ></div>
+    <div id="app"></div>
     <!--    Part B-->
     <div id="bpp">
         <el-button type="danger" @click="handleClick">{{ message }}</el-button>
-        <h5>{{showtime}}————更新时间：{{updatetime}}</h5>
+        <div style="margin: 0 auto;border: black 1px solid">
+            This part show be my question list
+
+        </div>
+        <el-affix :offset="30" position="bottom">
+            <h5>{{showtime}}————更新时间：{{updatetime}}</h5>
+        </el-affix>
     </div>
 
 </div>
@@ -28,14 +34,23 @@
     const App = {
         data() {
             return {
-                title: '大道至简'
+                motto: '大道至简',
+                brief:'世界变得越来越无序',
+                progress_per:0,
+                picurl: {
+                    originurl: 'https://femto.scrolller.com/this-fox-is-so-adorable-8luimgh35s-1440x1029.jpg',
+                    thumbnailurl: 'https://i.loli.net/2021/06/11/mM95GSh8iszHqZb.jpg'
+                }
             }
         },
+        mounted(){
+            // this.progress_per = (new Date().getFullYear() - 1991) / 80
+            this.progress_per = (new Date().getFullYear() - 1991) / 80 * 100
+        },
         template: `
-          <h1>{{ title }}</h1>
-          <item_name>插入的内容!</item_name>
-          <img src="https://femto.scrolller.com/this-fox-is-so-adorable-8luimgh35s-1440x1029.jpg" alt="fox"
-               height="200">
+          <h1>{{ motto }}</h1>
+          <item_name>{{ brief }}</item_name>
+          <el-progress :text-inside="true" :stroke-width="2" :percentage="progress_per"></el-progress>
 
         `
     };
@@ -76,22 +91,22 @@
         data() {
             return {
                 message: "点我",
-                showtime:'',
-                updatetime:'2021/06/11 11:52'
+                showtime: '',
+                updatetime: '2021/06/11 15:52'
             };
         },
         methods: {
             handleClick() {
                 alert('Hello World')
             },
-            show_time(){
+            show_time() {
                 this.showtime = new Date().toLocaleString()
             }
         },
-        mounted(){
-            setInterval(()=>{
+        mounted() {
+            setInterval(() => {
                 this.show_time()
-            },1000)
+            }, 1000)
         },
     };
 
