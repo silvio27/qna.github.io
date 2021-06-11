@@ -16,7 +16,7 @@
     <!--    Part B-->
     <div id="bpp">
         <el-button type="danger" @click="handleClick">{{ message }}</el-button>
-        <h5>{{showtime}}</h5>
+        <h5>{{showtime}}————更新时间：{{updatetime}}</h5>
     </div>
 
 </div>
@@ -76,7 +76,8 @@
         data() {
             return {
                 message: "点我",
-                showtime:''
+                showtime:'',
+                updatetime:'2021/06/11 11:52'
             };
         },
         methods: {
