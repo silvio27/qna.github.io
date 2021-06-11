@@ -13,8 +13,10 @@
 <body>
 <div>
     <div id="app"></div>
+    <!--    Part B-->
     <div id="bpp">
         <el-button type="danger" @click="handleClick">{{ message }}</el-button>
+        <h5>{{showtime}}</h5>
     </div>
 
 </div>
@@ -24,15 +26,16 @@
 <script>
 
     const App = {
-        data(){
+        data() {
             return {
-                message:'PartA'
+                message: 'PartA'
             }
         },
-        template:`
-          <h1>{{message}}</h1>
+        template: `
+          <h1>{{ message }}</h1>
           <item_name>插入的内容!</item_name>
-          <img src="https://femto.scrolller.com/this-fox-is-so-adorable-8luimgh35s-1440x1029.jpg" alt="fox" height="200">
+          <img src="https://femto.scrolller.com/this-fox-is-so-adorable-8luimgh35s-1440x1029.jpg" alt="fox"
+               height="200">
 
         `
     };
@@ -56,7 +59,7 @@
         template: `
 
           <div class="acpt">
-              <slot></slot>
+          <slot></slot>
           </div>
 
         `,
@@ -66,18 +69,29 @@
     app.use(ElementPlus);
     const vm = app.mount('#app');
 
+    // ##########################################################################
+    // ##########################################################################
 
     const Bpp = {
         data() {
             return {
                 message: "点我",
+                showtime:''
             };
         },
         methods: {
             handleClick() {
                 alert('Hello World')
+            },
+            show_time(){
+                this.showtime = new Date().toLocaleString()
             }
-        }
+        },
+        mounted(){
+            setInterval(()=>{
+                this.show_time()
+            },1000)
+        },
     };
 
     const bpp = Vue.createApp(Bpp);
