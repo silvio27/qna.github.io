@@ -8,3 +8,10 @@
 /httpRequests/
 .DS_Store
 .idea
+data.json
+
+# Virtual environment
+/venv/
+
+# main.py
+
