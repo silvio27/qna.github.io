@@ -45,6 +45,7 @@ def addtodata():
         'title': '',  # * 名称
         'comments': [],  # comment 可以添加很多comment[id] = data,这里即思考是否问题即答案?
         'tags': [],  # push tag_id tag进入tag库,返回id到这边
+        'update_time': '',  # time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
     }
     datum = []
 
@@ -53,25 +54,42 @@ def dict2json(datum):
     return json.dumps(datum, ensure_ascii=False)
 
 
+def write_to_file(sth, filename='datalist.json'):
+    with open(filename, 'w') as f:
+        f.write(sth)
+
+
 if __name__ == '__main__':
     data = {
         '1': {
             'title': '我的第一个问题?',
-            'comments': [2,3],
-            'tags': [],
+            'comments': [2, 3],
+            'tags': [1],
+            'update_time': '2021-06-11 13:06:08',
 
         },
         '2': {
             'title': '我的第一个回答',
             'comments': [],
-            'tags': [],
+            'tags': [2],
+            'update_time': '2021-06-12 21:06:08',
 
         },
         '3': {
             'title': '我的第2个问题?',
             'comments': [],
-            'tags': [],
+            'tags': [1],
+            'update_time': '2021-06-12 23:06:08',
+
+        },
+        '4': {
+            'title': '我的第二个问题',
+            'comments': [3],
+            'tags': [1, 2],
+            'update_time': '2021-06-13 00:31:08',
 
         }
     }
-    print(dict2json(data))
+    jsdata = dict2json(data)
+    write_to_file(jsdata)
+    print(jsdata)
