@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>MyPage</title>
+    <title>Local_MyPage</title>
     <script src="https://unpkg.com/vue@next"></script>
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <!-- 引入样式 -->
@@ -127,7 +127,7 @@
             handleChange(val) {
                 console.log(val);
             },
-            get_q_list(request_url = 'https://silvio27.github.io/questionlist.json') {
+            get_q_list(request_url = 'http://localhost:8888/file/questionlist.json') {
                 axios({
                     method: 'get',
                     url: request_url
@@ -139,7 +139,7 @@
                     console.log(error)
                 })
             },
-            get_a_list(request_url = 'https://silvio27.github.io/answerlist.json') {
+            get_a_list(request_url = 'http://localhost:8888/file/answerlist.json') {
                 axios({
                     method: 'get',
                     url: request_url
@@ -151,9 +151,20 @@
                     console.log(error)
                 })
             },
-            add_new_answer(data=''){
-                alert(data)
-            }
+            add_new_answer(event){
+                // alert(data)
+                console.log(event)
+                this.get_a_list('http://localhost:8888/addanswer/'+this.newa) // 添加答案
+                this.newa = ''
+                this.get_a_list()
+            },
+            add_new_question(event){
+                console.log(event)
+                this.get_a_list('http://localhost:8888/addquestion/'+this.newq) // 添加答案
+                this.newq = ''
+                this.get_q_list()
+            },
+
 
 
 
@@ -177,7 +188,7 @@
                 </template>
                 <!--                <thinking>答案是否显示和,可以数据库读取的时候直接拒绝</thinking>-->
                 <template v-for="i in value.comments">
-                  <div class="ansc" v-if="a_list[i].isShow = 1">
+                  <div class="ansc">
                     <div class="minifont">——{{ a_list[i].create_time }}————</div>
                     <div>{{ a_list[i].title }}</div>
                     <div>{{ a_list[i].describe }}</div>
@@ -196,7 +207,7 @@
                       </el-input>
                     </el-col>
                     <el-col :span="2">
-                      <el-button type="primary" size="medium" style="margin-right: 30px" @click="add_new_answer(newa)">添加</el-button>
+                      <el-button type="primary" size="medium" style="margin-right: 30px" @click.stop="add_new_answer(event)">添加</el-button>
                     </el-col>
                   </el-row>
                 </div>
@@ -210,7 +221,7 @@
                 <el-input v-model.lazy="newq" placeholder="新增一个答案"></el-input>
               </el-col>
               <el-col :span="2">
-                <el-button type="primary" size="medium" style="margin-right: 30px">添加</el-button>
+                <el-button type="primary" size="medium" style="margin-right: 30px" @click="add_new_question(event)">添加</el-button>
               </el-col>
             </el-row>
           </div>

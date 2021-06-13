@@ -49,9 +49,11 @@ def addtodata():
     }
     datum = []
 
+
 # 字典 to Json
 def dict2json(datum):
     return json.dumps(datum, ensure_ascii=False)
+
 
 # 写入文件
 def write_to_file(sth, filename='datalist.json'):
@@ -59,6 +61,7 @@ def write_to_file(sth, filename='datalist.json'):
         f.write(sth)
 
     print('Done')
+
 
 # 连接数据库
 def connect_db(sql):
@@ -97,6 +100,7 @@ def connect_db(sql):
 
     check_db = 'select * from sh_db'
 
+
 # 更新问题清单和答案清单
 def update_qna_list():
     tags = {
@@ -110,16 +114,16 @@ def update_qna_list():
         for i in connect_db(sql):
             if tag in eval(i[8]):
                 dict[i[0]] = {
-                    "title": i[1],
-                    "describe": i[2],
-                    "content": i[3],
-                    "ref": i[4],
+                    "title": i[1] if i[1] else '',
+                    "describe": i[2] if i[2] else '',
+                    "content": i[3] if i[3] else '',
+                    "ref": i[4] if i[4] else '',
                     "create_time": str(i[5]),
                     "update_time": str(i[6]),
-                    "comments": eval(i[7]) if i[7] else i[7],
+                    "comments": eval(i[7]) if i[7] else '',
                     "tags": eval(i[8]),
-                    "created_by": i[9],
-                    "isShow": i[10]
+                    "created_by": i[9] if i[9] else '',
+                    "isShow": i[10] if i[10] else ''
                 }
         return dict2json(dict)
 
