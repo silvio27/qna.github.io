@@ -42,7 +42,8 @@
                 picurl: {
                     originurl: 'https://femto.scrolller.com/this-fox-is-so-adorable-8luimgh35s-1440x1029.jpg',
                     thumbnailurl: 'https://i.loli.net/2021/06/11/mM95GSh8iszHqZb.jpg'
-                }
+                },
+
             }
         },
         mounted() {
@@ -53,8 +54,6 @@
           <h1>{{ motto }}</h1>
           <item_name>{{ brief }}</item_name>
           <el-progress :text-inside="true" :stroke-width="2" :percentage="progress_per"></el-progress>
-          <hr>
-          <ele-collapse></ele-collapse>
           <hr>
           <data-by-sql></data-by-sql>
         `
@@ -172,7 +171,11 @@
                 items: {},
                 // items: '',
                 items_length: 0,
-                activeNames: ['1','2','3'] // '1', '4'
+                anslist: '',  // 回答清单
+                activeNames: ['1'], // '1', '4'
+                q_list: '',
+                a_list: ''
+
             }
         },
         methods: {
@@ -182,33 +185,47 @@
             handleChange(val) {
                 console.log(val);
             },
-            send(request_url) {
+            get_q_list(request_url='https://silvio27.github.io/questionlist.json') {
                 axios({
                     method: 'get',
                     url: request_url
-                }).then(function (res) {
-                    console.log(res.data)
+                }).then(res => {
+                    // console.log(res.data)
                     console.log(Object.values(res.data).length)
-                    this.items =  res.data
+                    this.q_list = res.data
                 }).catch(error => {
                     console.log(error)
-                });
+                })
             },
+            get_a_list(request_url='https://silvio27.github.io/answerlist.json') {
+                axios({
+                    method: 'get',
+                    url: request_url
+                }).then(res => {
+                    // console.log(res.data)
+                    console.log(Object.values(res.data).length)
+                    this.a_list = res.data
+                }).catch(error => {
+                    console.log(error)
+                })
+            },
+
 
         },
         mounted() {
             // 输入url
-            this.send('https://silvio27.github.io/datalistbysql.json')
-            // console.log(this.items)
+            this.get_a_list()
+            this.get_q_list()
+
         },
         template: `
 
           <div class="acpt">
           <el-collapse v-model="activeNames" @change="handleChange">
-            <template v-for="(value,key,index) in items" :key="key">
-              <el-collapse-item :title='value.title' :name="key">
-                <div>{{value}}</div>
-                <div>{{ value.create_time }}</div>
+            <template v-for="(value,key,index) in q_list" :key="key">
+              <el-collapse-item :title='value.title' :name="key" v-if="value.tags.indexOf(1) > -1">
+                <div>{{ value }}</div>
+                <div class="minifont">{{ value.create_time }}</div>
               </el-collapse-item>
             </template>
           </el-collapse>

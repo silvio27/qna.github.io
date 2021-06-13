@@ -49,18 +49,18 @@ def addtodata():
     }
     datum = []
 
-
+# 字典 to Json
 def dict2json(datum):
     return json.dumps(datum, ensure_ascii=False)
 
-
+# 写入文件
 def write_to_file(sth, filename='datalist.json'):
     with open(filename, 'w') as f:
         f.write(sth)
 
     print('Done')
 
-
+# 连接数据库
 def connect_db(sql):
     cnx = pymysql.connect(
         user='root',
@@ -97,6 +97,35 @@ def connect_db(sql):
 
     check_db = 'select * from sh_db'
 
+# 更新问题清单和答案清单
+def update_qna_list():
+    tags = {
+        1: "questionlist.json",
+        2: "answerlist.json"
+    }
+
+    def get_list(tablename, tag=1):
+        sql = f"select * from {tablename}"
+        dict = {}
+        for i in connect_db(sql):
+            if tag in eval(i[8]):
+                dict[i[0]] = {
+                    "title": i[1],
+                    "describe": i[2],
+                    "content": i[3],
+                    "ref": i[4],
+                    "create_time": str(i[5]),
+                    "update_time": str(i[6]),
+                    "comments": eval(i[7]) if i[7] else i[7],
+                    "tags": eval(i[8]),
+                    "created_by": i[9],
+                    "isShow": i[10]
+                }
+        return dict2json(dict)
+
+    for (tag, filename) in tags.items():
+        write_to_file(get_list(tablename='qnalist', tag=tag), filename=filename)
+
 
 if __name__ == '__main__':
     data = {
@@ -129,38 +158,15 @@ if __name__ == '__main__':
 
         }
     }
+
+    update_qna_list()
+
     # jsdata = dict2json(data)
     # write_to_file(jsdata)
     # print(jsdata)
-    sql = "desc qnalist"
-    sqldata = connect_db(sql)
-    for i in sqldata:
-        print(i[0], end=',\t')
-    print()
 
-    sql = "select * from qnalist"
-    sqldata = connect_db(sql)
-    for i in sqldata:
-        print(i)
-
-    aa = sqldata[0][5]
-    print(aa)
-    A = {}
-
-    for i in sqldata:
-        A[i[0]]={
-            "title": i[1],
-            "describe":i[2],
-            "content":i[3],
-            "ref":i[4],
-            "create_time":str(i[5]),
-            "update_time":str(i[6]),
-            "comments":i[7],
-            "tags":eval(i[8]),
-            "created_by":i[9],
-            "isShow":i[10]
-        }
-
-
-    ans = dict2json(A)
-    write_to_file(ans,'datalistbysql.json')
+    # sql_desc = "desc qnalist"
+    # sqldata = connect_db(sql)
+    # for i in sqldata:
+    #     print(i[0], end=',\t')
+    # print()
