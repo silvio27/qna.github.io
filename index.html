@@ -124,7 +124,7 @@
             },
             getlocalAnswer(linkitem = '') {
                 // this.answer = "Thinking……"
-                axios.get('https://silvio27.github.io/demo01/' + linkitem)
+                axios.get('https://silvio27.github.io/' + linkitem)
                     .then(response => {
                         // console.log(response.data)
                         this.items = response.data
@@ -169,50 +169,7 @@
         data() {
             return {
                 listname: '人生问答,问题和答案的总数',
-                items: {
-                    "1": {
-                        "title": "什么才是简单的生活?",
-                        "describe": null,
-                        "content": null,
-                        "ref": null,
-                        "create_time": "2021-06-13 10:26:49",
-                        "update_time": "2021-06-13 10:26:49",
-                        "comments": null,
-                        "tags": [
-                            1
-                        ],
-                        "created_by": null,
-                        "isShow": 1
-                    },
-                    "2": {
-                        "title": "如何才能挣钱?",
-                        "describe": null,
-                        "content": null,
-                        "ref": null,
-                        "create_time": "2021-06-13 10:26:52",
-                        "update_time": "2021-06-13 10:26:52",
-                        "comments": null,
-                        "tags": [
-                            1
-                        ],
-                        "created_by": null,
-                        "isShow": 1
-                    },
-                    "3": {
-                        "title": "如何创建虚拟身份?",
-                        "describe": null,
-                        "content": null,
-                        "ref": null,
-                        "create_time": "2021-06-13 10:27:02",
-                        "update_time": "2021-06-13 10:27:02",
-                        "comments": null,
-                        "tags": [
-                            1
-                        ],
-                        "created_by": null,
-                        "isShow": 1
-                    }
-                },
+                items: {},
                 // items: '',
                 items_length: 0,
                 activeNames: ['1','2','3'] // '1', '4'
@@ -232,7 +189,7 @@
                 }).then(function (res) {
                     console.log(res.data)
                     console.log(Object.values(res.data).length)
-                    this.items = res.data
+                    this.items =  res.data
                 }).catch(error => {
                     console.log(error)
                 });
