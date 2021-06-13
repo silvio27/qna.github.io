@@ -156,7 +156,7 @@ if __name__ == '__main__':
             "create_time":str(i[5]),
             "update_time":str(i[6]),
             "comments":i[7],
-            "tags":i[8],
+            "tags":eval(i[8]),
             "created_by":i[9],
             "isShow":i[10]
         }
