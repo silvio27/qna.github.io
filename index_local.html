@@ -17,13 +17,13 @@
 
     <!--    Part B-->
     <div id="bpp">
-<!--        <el-button type="danger" @click="handleClick">{{ message }}</el-button>-->
-<!--        <div style="margin: 0 auto;border: black 1px solid">-->
-<!--            Good * 2 Study,Day * 2 Up-->
+        <!--        <el-button type="danger" @click="handleClick">{{ message }}</el-button>-->
+        <!--        <div style="margin: 0 auto;border: black 1px solid">-->
+        <!--            Good * 2 Study,Day * 2 Up-->
 
-<!--        </div>-->
+        <!--        </div>-->
         <el-affix :offset="30" position="bottom">
-            <h5>{{showtime}}————更新时间：{{updatetime}}</h5>
+            <h5>{{showtime}}</h5>
         </el-affix>
     </div>
 
@@ -116,7 +116,8 @@
                 q_list: '',
                 a_list: '',
                 newq: '',
-                newa: ''
+                newa: '',
+                select_item: ''
 
             }
         },
@@ -125,6 +126,7 @@
                 console.log(event.target)
             },
             handleChange(val) {
+                this.select_item = val
                 console.log(val);
             },
             get_q_list(request_url = 'http://localhost:8888/file/questionlist.json') {
@@ -151,21 +153,21 @@
                     console.log(error)
                 })
             },
-            add_new_answer(event){
+            add_new_answer(val) {
                 // alert(data)
-                console.log(event)
-                this.get_a_list('http://localhost:8888/addanswer/'+this.newa) // 添加答案
+                console.log(val)
+                this.get_a_list('http://localhost:8888/addanswer/' + this.newa + '+' + this.select_item) // 添加答案
                 this.newa = ''
                 this.get_a_list()
             },
-            add_new_question(event){
+            add_new_question(event) {
                 console.log(event)
-                this.get_a_list('http://localhost:8888/addquestion/'+this.newq) // 添加答案
+                this.get_a_list('http://localhost:8888/addquestion/' + this.newq) // 添加答案
                 this.newq = ''
+                console.log('before' + this.q_list)
                 this.get_q_list()
+                console.log('after' + this.q_list)
             },
-
-
 
 
         },
@@ -175,6 +177,7 @@
             this.get_q_list()
 
         },
+        computed: {},
         template: `
 
           <div class="acpt">
@@ -207,7 +210,9 @@
                       </el-input>
                     </el-col>
                     <el-col :span="2">
-                      <el-button type="primary" size="medium" style="margin-right: 30px" @click.stop="add_new_answer(event)">添加</el-button>
+                      <el-button type="primary" size="medium" style="margin-right: 30px"
+                                 @click.stop="add_new_answer(val)">添加
+                      </el-button>
                     </el-col>
                   </el-row>
                 </div>
@@ -218,10 +223,11 @@
           <div>
             <el-row>
               <el-col :span="12">
-                <el-input v-model.lazy="newq" placeholder="新增一个答案"></el-input>
+                <el-input v-model.lazy="newq" placeholder="新增一个问题"></el-input>
               </el-col>
               <el-col :span="2">
-                <el-button type="primary" size="medium" style="margin-right: 30px" @click="add_new_question(event)">添加</el-button>
+                <el-button type="primary" size="medium" style="margin-right: 30px" @click="add_new_question(event)">添加
+                </el-button>
               </el-col>
             </el-row>
           </div>

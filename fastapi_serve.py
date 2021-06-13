@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-# -*- coding: utf-8 -*-
+# -*- coding: gbk -*-
 # @Time    : 2021/6/13 16:51
 # @Author  : Silvio27
 # @Email   : silviosun@outlook.com
@@ -21,13 +21,15 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from starlette.middleware.cors import CORSMiddleware
 import uvicorn
+import time
+from main import connect_db, update_qna_list,dict2json
 
 app = FastAPI()
 
-# 鍓嶇椤甸潰url
+# 前端页面url
 origins = ['*']
 
-# 鍚庡彴api鍏佽璺ㄥ煙
+# 后台api允许跨域
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
@@ -51,15 +53,50 @@ def root(s: str):
 
 @app.get("/addanswer/{s}")
 def add_answer(s: str):
-    print('绛旀:' + s)
+    print('答案:' + s)
+    ans = s.split('+')
+    now = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
+    # 创建答案
+    sql = f'''
+                INSERT INTO qnalist 
+                (title,create_time,update_time,tags,created_by) VALUES 
+                ('{ans[0]}','{now}','{now}', '[2]',{ans[1]})
+            '''
+    print(connect_db(sql))
+    ## 更新问题的答案list
+    # 获得答案的id
+    sql = f"select id from qnalist where title= '{ans[0]}'"
+    an_id = connect_db(sql)[0][0]
+    # 获得问题的id
+    sql = f'''select comments from qnalist where id= {ans[1]}'''
+    jg = connect_db(sql)[0][0]
+    # 如果原来的comments为空则创建[],不然就append到[]
+    if jg is None:
+        lb = [an_id]
+    else:
+        lb = eval(jg)
+        lb.append(an_id)
+    # 更新到问题comments中
+    sql = f"update qnalist set comments = '{lb}' where id= '{ans[1]}'"
+    connect_db(sql)
+
+    # 更新问题和答案列表
+    update_qna_list()
     return s
 
 
 @app.get("/addquestion/{s}")
 def add_question(s: str):
-    print('闂:' + s)
+    print('问题:' + s)
+    now = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
+    sql = f'''
+            INSERT INTO qnalist 
+            (title,create_time,update_time,tags) VALUES 
+            ('{s}','{now}','{now}', '[1]')
+        '''
+    connect_db(sql)
+    update_qna_list()
     return s
-
 
 @app.get("/message")
 async def root():

@@ -59,8 +59,7 @@ def dict2json(datum):
 def write_to_file(sth, filename='datalist.json'):
     with open(filename, 'w') as f:
         f.write(sth)
-
-    print('Done')
+    print(f'已写入文件:{filename}')
 
 
 # 连接数据库
@@ -74,10 +73,11 @@ def connect_db(sql):
     cursor = cnx.cursor()
     try:
         cursor.execute(sql)
+        cnx.commit()
+        # print('ok:'+sql)
     except:
-        print(sql)
+        print('error:' + sql)
 
-    cnx.commit()
     asw = cursor.fetchall()
     cursor.close()
     cnx.close()
@@ -165,12 +165,4 @@ if __name__ == '__main__':
 
     update_qna_list()
 
-    # jsdata = dict2json(data)
-    # write_to_file(jsdata)
-    # print(jsdata)
 
-    # sql_desc = "desc qnalist"
-    # sqldata = connect_db(sql)
-    # for i in sqldata:
-    #     print(i[0], end=',\t')
-    # print()
