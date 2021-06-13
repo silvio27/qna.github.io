@@ -172,7 +172,7 @@
                 // items: '',
                 items_length: 0,
                 anslist: '',  // 回答清单
-                activeNames: ['1'], // '1', '4'
+                activeNames: [], // '1', '4' 后端可以根据需要返回
                 q_list: '',
                 a_list: ''
 
@@ -185,7 +185,7 @@
             handleChange(val) {
                 console.log(val);
             },
-            get_q_list(request_url='https://silvio27.github.io/questionlist.json') {
+            get_q_list(request_url = 'https://silvio27.github.io/questionlist.json') {
                 axios({
                     method: 'get',
                     url: request_url
@@ -197,7 +197,7 @@
                     console.log(error)
                 })
             },
-            get_a_list(request_url='https://silvio27.github.io/answerlist.json') {
+            get_a_list(request_url = 'https://silvio27.github.io/answerlist.json') {
                 axios({
                     method: 'get',
                     url: request_url
@@ -223,9 +223,19 @@
           <div class="acpt">
           <el-collapse v-model="activeNames" @change="handleChange">
             <template v-for="(value,key,index) in q_list" :key="key">
-              <el-collapse-item :title='value.title' :name="key" v-if="value.tags.indexOf(1) > -1">
-                <div>{{ value }}</div>
-                <div class="minifont">{{ value.create_time }}</div>
+              <el-collapse-item :name="key" v-if="value.comments">
+                <template #title> {{ (index + 1) }}.{{ value.title }}</template>
+                <!--                <thinking>答案是否显示和,可以数据库读取的时候直接拒绝</thinking>-->
+                <template v-for="i in value.comments">
+                  <div class="ansc" v-if="a_list[i].isShow = 1">
+                    <div class="minifont">——{{ a_list[i].create_time }}————</div>
+                    <div>{{ a_list[i].title }}</div>
+                    <div>{{ a_list[i].describe }}</div>
+                    <div>{{ a_list[i].content }}</div>
+                  </div>
+                </template>
+              </el-collapse-item>
+              <el-collapse-item :name="key" :title="index+1+'. '+value.title" v-else disabled >
               </el-collapse-item>
             </template>
           </el-collapse>
@@ -283,8 +293,13 @@
     .minifont {
         /*font-size: 12px;*/
         color: lightgray;
-
     }
+
+    .ansc {
+        padding-left: 20px;
+    }
+
+
 </style>
 
 </html>
