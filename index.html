@@ -103,73 +103,13 @@
     // ####################################################################
 
 
-    // element-Collapse 折叠面板
-    app.component('ele-collapse', {
-        props: [],
-        data() {
-            return {
-                listname: '人生问答,问题和答案的总数',
-                items: '',
-                items_length: 0,
-                activeNames: [] // '1', '4'
-            }
-        },
-        methods: {
-            doNothing(event) {
-                console.log(event.target)
-            },
-            handleChange(val) {
-                console.log(val);
-            },
-            getlocalAnswer(linkitem = '') {
-                // this.answer = "Thinking……"
-                axios.get('https://silvio27.github.io/' + linkitem)
-                    .then(response => {
-                        // console.log(response.data)
-                        this.items = response.data
-                        this.items_length = Object.keys(this.items).length
-
-                    })
-                    .catch(error => {
-                        this.items = 'Error'
-                        // alert(this.localback)
-                    })
-            }
-
-        },
-        mounted() {
-            this.getlocalAnswer('datalist.json')
-        },
-        template: `
-
-          <div class="acpt">
-          <h3>{{ listname }} 共 {{ items_length }} 个</h3>
-          <el-collapse v-model="activeNames" @change="handleChange">
-            <template v-for="(value,key,index) in items" :key="key">
-              <el-collapse-item :title='key+". "+value.title+" 回答数量: "+value.comments.length' :name=key
-                                style="text-align: left;" v-if="value.tags.indexOf(1) > -1">
-                <div style="padding-left: 20px" v-if="value.comments.length>0" v-for="i in value.comments"
-                     :key="value.update_time">
-                  <div class="minifont">——{{ items[i].update_time }}————</div>
-                  <div>{{ items[i].title }}</div>
-                </div>
-              </el-collapse-item>
-            </template>
-          </el-collapse>
-          </div>
-
-        `,
-    })
-
-
-    // databysql
+    // data_by_sql
     app.component('data-by-sql', {
         props: [],
         data() {
             return {
-                listname: '人生问答,问题和答案的总数',
-                items: {},
-                // items: '',
+                listname: '人生问答',
+                items: '',
                 items_length: 0,
                 anslist: '',  // 回答清单
                 activeNames: [], // '1', '4' 后端可以根据需要返回
@@ -221,6 +161,7 @@
         template: `
 
           <div class="acpt">
+          <h3>{{listname}}</h3>
           <el-collapse v-model="activeNames" @change="handleChange">
             <template v-for="(value,key,index) in q_list" :key="key">
               <el-collapse-item :name="key" v-if="value.comments">
