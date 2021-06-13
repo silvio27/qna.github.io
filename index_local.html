@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>MyPage</title>
+    <script src="https://unpkg.com/vue@next"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <!-- 引入样式 -->
+    <link rel="stylesheet" href="https://unpkg.com/element-plus/lib/theme-chalk/index.css">
+    <!-- 引入组件库 -->
+    <script src="https://unpkg.com/element-plus/lib/index.full.js"></script>
+</head>
+<body>
+<div style="text-align: center">
+    <div id="app"></div>
+
+
+    <!--    Part B-->
+    <div id="bpp">
+<!--        <el-button type="danger" @click="handleClick">{{ message }}</el-button>-->
+<!--        <div style="margin: 0 auto;border: black 1px solid">-->
+<!--            Good * 2 Study,Day * 2 Up-->
+
+<!--        </div>-->
+        <el-affix :offset="30" position="bottom">
+            <h5>{{showtime}}————更新时间：{{updatetime}}</h5>
+        </el-affix>
+    </div>
+
+</div>
+
+</body>
+
+<script>
+
+    const App = {
+        data() {
+            return {
+                motto: '大道至简',
+                brief: '世界变得越来越无序',
+                progress_per: 0,
+                picurl: {
+                    originurl: 'https://femto.scrolller.com/this-fox-is-so-adorable-8luimgh35s-1440x1029.jpg',
+                    thumbnailurl: 'https://i.loli.net/2021/06/11/mM95GSh8iszHqZb.jpg'
+                },
+
+            }
+        },
+        mounted() {
+            // this.progress_per = (new Date().getFullYear() - 1991) / 80
+            this.progress_per = (new Date().getFullYear() - 1991) / 80 * 100
+        },
+        template: `
+          <h1>{{ motto }}</h1>
+          <item_name>{{ brief }}</item_name>
+          <el-progress :text-inside="true" :stroke-width="2" :percentage="progress_per"></el-progress>
+          <hr>
+          <data-by-sql></data-by-sql>
+        `
+    };
+
+    const app = Vue.createApp(App);
+
+
+    // ####################################################################
+    // 组件模板
+    app.component('item_name', {
+        props: [],
+        data() {
+            return {
+                item: ''
+            }
+        },
+        methods: {
+            doNothing(event) {
+                console.log(event.target)
+            },
+            send(request_url) {
+                axios({
+                    method: 'get',
+                    url: request_url
+                }).then(function (res) {
+                    console.log(res.data)
+                }).catch(error => {
+                    console.log(error)
+                });
+            },
+
+        },
+        mounted() {
+            // 输入url
+            // this.send()
+        },
+        template: `
+
+          <div class="acpt">
+          <slot></slot>
+          </div>
+
+        `,
+    })
+
+    // ####################################################################
+
+
+    // data_by_sql
+    app.component('data-by-sql', {
+        props: [],
+        data() {
+            return {
+                listname: '人生问答',
+                items: '',
+                items_length: 0,
+                anslist: '',  // 回答清单
+                activeNames: [], // '1', '4' 后端可以根据需要返回
+                q_list: '',
+                a_list: '',
+                newq: '',
+                newa: ''
+
+            }
+        },
+        methods: {
+            doNothing(event) {
+                console.log(event.target)
+            },
+            handleChange(val) {
+                console.log(val);
+            },
+            get_q_list(request_url = 'https://silvio27.github.io/questionlist.json') {
+                axios({
+                    method: 'get',
+                    url: request_url
+                }).then(res => {
+                    // console.log(res.data)
+                    console.log(Object.values(res.data).length)
+                    this.q_list = res.data
+                }).catch(error => {
+                    console.log(error)
+                })
+            },
+            get_a_list(request_url = 'https://silvio27.github.io/answerlist.json') {
+                axios({
+                    method: 'get',
+                    url: request_url
+                }).then(res => {
+                    // console.log(res.data)
+                    console.log(Object.values(res.data).length)
+                    this.a_list = res.data
+                }).catch(error => {
+                    console.log(error)
+                })
+            },
+            add_new_answer(data=''){
+                alert(data)
+            }
+
+
+
+        },
+        mounted() {
+            // 输入url
+            this.get_a_list()
+            this.get_q_list()
+
+        },
+        template: `
+
+          <div class="acpt">
+          <h3>{{ listname }}</h3>
+
+          <el-collapse v-model="activeNames" @change="handleChange" accordion>
+            <template v-for="(value,key,index) in q_list" :key="key">
+              <el-collapse-item :name="key">
+                <template #title>
+                  {{ (index + 1) }}.{{ value.title }}
+                </template>
+                <!--                <thinking>答案是否显示和,可以数据库读取的时候直接拒绝</thinking>-->
+                <template v-for="i in value.comments">
+                  <div class="ansc" v-if="a_list[i].isShow = 1">
+                    <div class="minifont">——{{ a_list[i].create_time }}————</div>
+                    <div>{{ a_list[i].title }}</div>
+                    <div>{{ a_list[i].describe }}</div>
+                    <div>{{ a_list[i].content }}</div>
+                  </div>
+                </template>
+                <div>
+                  <br>
+                  <el-row>
+                    <el-col :span="8">
+                      <el-input
+                          type="textarea"
+                          autosize
+                          placeholder="输入答案"
+                          v-model="newa">
+                      </el-input>
+                    </el-col>
+                    <el-col :span="2">
+                      <el-button type="primary" size="medium" style="margin-right: 30px" @click="add_new_answer(newa)">添加</el-button>
+                    </el-col>
+                  </el-row>
+                </div>
+              </el-collapse-item>
+            </template>
+          </el-collapse>
+          <br>
+          <div>
+            <el-row>
+              <el-col :span="12">
+                <el-input v-model.lazy="newq" placeholder="新增一个答案"></el-input>
+              </el-col>
+              <el-col :span="2">
+                <el-button type="primary" size="medium" style="margin-right: 30px">添加</el-button>
+              </el-col>
+            </el-row>
+          </div>
+          </div>
+
+        `,
+    })
+
+
+    app.use(ElementPlus);
+    const vm = app.mount('#app');
+
+
+    // ##########################################################################
+    // ####################      Part B      ####################################
+    // ##########################################################################
+
+    const Bpp = {
+        data() {
+            return {
+                message: "点我",
+                showtime: '',
+                updatetime: '2021/06/11 15:52'
+            };
+        },
+        methods: {
+            handleClick() {
+                alert('Hello World')
+            },
+            show_time() {
+                this.showtime = new Date().toLocaleString()
+            }
+        },
+        mounted() {
+            setInterval(() => {
+                this.show_time()
+            }, 1000)
+        },
+    };
+
+    const bpp = Vue.createApp(Bpp);
+    bpp.use(ElementPlus);
+    bpp.mount("#bpp");
+</script>
+
+<style scope>
+    .acpt {
+        border: rgba(141, 141, 141, 0.63) 1px dashed;
+        margin: 5px;
+        padding: 5px;
+        text-align: left;
+        padding-left: 10px;
+    }
+
+    .minifont {
+        /*font-size: 12px;*/
+        color: lightgray;
+    }
+
+    .ansc {
+        padding-left: 20px;
+    }
+
+
+</style>
+
+</html>
