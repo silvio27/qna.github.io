@@ -185,7 +185,7 @@
 
           <el-collapse v-model="activeNames" @change="handleChange" accordion>
             <template v-for="(value,key,index) in q_list" :key="key">
-              <el-collapse-item :name="key">
+              <el-collapse-item :name="key" :disabled="value.comments.length === 0 ? true : false">
                 <template #title>
                   {{ (index + 1) }}.{{ value.title }}
                 </template>

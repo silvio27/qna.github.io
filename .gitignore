@@ -5,6 +5,10 @@
 /venv/
 /studyfile/
 
+/__pycache__/
+
+/studyfile/
+
 
 
 

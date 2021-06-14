@@ -161,10 +161,10 @@
         template: `
 
           <div class="acpt">
-          <h3>{{listname}}</h3>
+          <h3>{{ listname }}</h3>
           <el-collapse v-model="activeNames" @change="handleChange">
             <template v-for="(value,key,index) in q_list" :key="key">
-              <el-collapse-item :name="key" v-if="value.comments">
+              <el-collapse-item :name="key" :disabled="value.comments ? false:true">
                 <template #title> {{ (index + 1) }}.{{ value.title }}</template>
                 <!--                <thinking>答案是否显示和,可以数据库读取的时候直接拒绝</thinking>-->
                 <template v-for="i in value.comments">
@@ -175,8 +175,6 @@
                     <div>{{ a_list[i].content }}</div>
                   </div>
                 </template>
-              </el-collapse-item>
-              <el-collapse-item :name="key" :title="index+1+'. '+value.title" v-else disabled >
               </el-collapse-item>
             </template>
           </el-collapse>
