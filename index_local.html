@@ -177,7 +177,9 @@
             this.get_q_list()
 
         },
-        computed: {},
+        computed: {
+
+        },
         template: `
 
           <div class="acpt">
@@ -185,9 +187,9 @@
 
           <el-collapse v-model="activeNames" @change="handleChange" accordion>
             <template v-for="(value,key,index) in q_list" :key="key">
-              <el-collapse-item :name="key" :disabled="value.comments.length === 0 ? true : false">
+              <el-collapse-item :name="key">
                 <template #title>
-                  {{ (index + 1) }}.{{ value.title }}
+                  {{ (index + 1) }}.<span> {{ value.title }}<button v-show="!value.comments" style="margin-left: 20px">添加答案</button></span>
                 </template>
                 <!--                <thinking>答案是否显示和,可以数据库读取的时候直接拒绝</thinking>-->
                 <template v-for="i in value.comments">
@@ -289,6 +291,14 @@
 
     .ansc {
         padding-left: 20px;
+    }
+
+    .wta {
+        color: red;
+    }
+
+    .aded {
+        color: yellowgreen;
     }
 
 
