@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>ReStudy</title>
+    <script src="https://unpkg.com/vue@next"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <!-- 引入样式 -->
+    <link rel="stylesheet" href="https://unpkg.com/element-plus/lib/theme-chalk/index.css">
+    <!-- 引入组件库 -->
+    <script src="https://unpkg.com/element-plus/lib/index.full.js"></script>
+</head>
+<body>
+<div style="text-align: center">
+    <div id="app"></div>
+
+</div>
+
+</body>
+
+<script>
+
+    const App = {
+        data() {
+            return {
+                motto: '大道至简',
+                isDisabled: false,
+                // toSon: '爸爸给你的信息'
+                toSon: '',
+                item_id: '123',
+                lists: ['语文', '数学', '体育'],
+                fontcolor: {'color': '#0B6FDE'}
+            }
+        },
+        mounted() {
+        },
+        methods: {
+            dolist(e) {
+                var c = this.lists.length
+                for (var i = 0; i < c; i++) {
+                    if (this.lists[i] == e) {
+                        this.lists.splice(i, 1)
+                        break
+                    }
+                }
+                console.log(this.lists)
+            },
+            handlecolor(color) {
+                this.fontcolor = {'color': color}
+            }
+
+        },
+        computed: {},
+        template: `
+          <h1 :style="fontcolor">{{ motto }}<input type="color" @change="handlecolor($event.target.value)"
+                                                   value="#0B6FDE" style="float:right"></h1>
+
+          <data-by-sql></data-by-sql>
+          <div v-for="(item,index) in lists">
+          <q-title-line :text="item" :item_id="index" @dodlist="dolist"></q-title-line>
+          </div>
+        `
+    };
+    const app = Vue.createApp(App);
+
+    // ####################################################################
+    // 组件模板
+    app.component('item_name', {
+        props: [],
+        data() {
+            return {
+                item: ''
+            }
+        },
+        methods: {
+            doNothing(event) {
+                console.log(event.target)
+            },
+            send(request_url) {
+                axios({
+                    method: 'get',
+                    url: request_url
+                }).then(function (res) {
+                    console.log(res.data)
+                }).catch(error => {
+                    console.log(error)
+                });
+            },
+
+        },
+        mounted() {
+            // 输入url
+            // this.send()
+        },
+        template: `
+
+          <div class="acpt">
+          <slot></slot>
+          </div>
+
+        `,
+    })
+
+    // ####################################################################
+
+
+    // data_by_sql
+    app.component('data-by-sql', {
+        props: [],
+        data() {
+            return {
+                listname: '人生问答',
+                pageurl: 'https://silvio27.github.io',
+                input_text: '',
+                isRed: true,
+                isGreen: false,
+                isActive: true
+            }
+        },
+        methods: {
+            doNothing(event) {
+                console.log(event.target)
+            },
+        },
+        mounted() {
+
+        },
+        computed: {},
+        watch: {
+            input_text(newly) {
+                if (newly.indexOf('?') > -1) {
+                    this.listname = newly
+                    this.isGreen = true
+                    this.isRed = false
+                } else if (newly.length === 0) {
+                    this.listname = '空'
+                } else {
+                    this.listname = '正在输入……'
+                    this.isRed = true
+                    this.isGreen = false
+                }
+            }
+        },
+
+        template: `
+
+          <div class="acpt">
+          <template v-if="isActive">
+            <h3 :class="{green:isGreen,red:isRed}">{{ listname }}<a :href="pageurl" target="_blank"><i
+                class="el-icon-ice-cream-round"></i></a></h3>
+            <el-input type="text" v-model="input_text"></el-input>
+          </template>
+
+          </div>
+        `,
+    })
+
+    // 编辑删除按钮组
+    app.component('edit-del-btn-group', {
+        props: ['tip', 'item_id'],
+        data() {
+            return {
+                isDelete: true,
+                visible: false
+            }
+        },
+        methods: {
+            handleClick() {
+                this.isDelete = !this.isDelete
+            },
+        },
+        mounted() {
+        },
+        template: `
+          <el-button-group>
+          <el-button type="primary" icon="el-icon-edit" @click="handleClick(),$emit('editipt')">编辑</el-button>
+          <el-button type="info" plain :id="item_id"
+                     @click.capture="$emit('enlargeText','子组件的按钮被点击了'+ this.tip)" disabled>
+          </el-button>
+          <el-popover
+              placement="top"
+              :width="160"
+              :visible="visible"
+          >
+            <p>Are you sure?</p>
+            <div style="text-align: right; margin: 0">
+              <el-button type="primary" size="small" @click="visible = false">取消</el-button>
+              <el-button type="danger" size="mini" @click="$emit('showno'),visible = false">确定</el-button>
+            </div>
+            <template #reference>
+              <el-button type="danger" icon="el-icon-delete" circle :plain="isDelete" :disabled="isDelete"
+                         @click="visible = true"></el-button>
+            </template>
+          </el-popover>
+
+
+          </el-button-group>
+
+        `,
+    })
+
+    // 标题+编辑删除按钮
+    app.component('q-title-line', {
+        props: ['text', 'item_id'],
+        data() {
+            return {
+                item: '输入一段文字',
+                btn_tip: '这是一段按钮提示内容',
+                showme: true,
+                item_id_btn: this.item_id + '+btn',
+                formInline: {
+                    user: '',
+                    region: ''
+                },
+                ttt: '',
+                editable: true,
+                cccc: ''
+            }
+        },
+        methods: {
+            doNothing(event) {
+                console.log(event.target)
+            },
+            send(request_url) {
+                axios({
+                    method: 'get',
+                    url: request_url
+                }).then(function (res) {
+                    console.log(res.data)
+                }).catch(error => {
+                    console.log(error)
+                });
+            },
+            show_alert(e = '没有内容') {
+                alert(e)
+            },
+            editinput() {
+                this.editable = !this.editable
+
+            },
+            handleChange() {
+                // alert(123)
+            }
+
+        },
+        computed() {
+
+        },
+        mounted() {
+            // 输入url
+            // this.send()
+            this.ttt = this.text
+        },
+        template: `
+          <div style="padding: 10px" v-show="showme" id="item_id">
+          <span style="margin-right: 10px">{{ item_id + 1 }}</span>
+          <el-input type="text" style="width: 50%" v-model="this.ttt" placeholder="占位专用小板凳"
+                    :title="text" @change='handleChange' :readonly="this.editable"></el-input>
+          <edit-del-btn-group :tip="text" :item_id='item_id_btn' @enlarge-text="show_alert"
+                              @showno="$emit('dodlist',this.text)" @editipt="editinput"></edit-del-btn-group>
+          </div>
+
+        `,
+    })
+
+
+    app.use(ElementPlus);
+    const vm = app.mount('#app');
+
+</script>
+
+<style scope>
+    .acpt {
+        border: rgba(141, 141, 141, 0.63) 1px dashed;
+        margin: 5px;
+        padding: 5px;
+        text-align: left;
+        padding-left: 10px;
+    }
+
+    .minifont {
+        /*font-size: 12px;*/
+        color: lightgray;
+    }
+
+    .ansc {
+        padding-left: 20px;
+    }
+
+    .red {
+        color: red;
+    }
+
+    .green {
+        color: yellowgreen;
+    }
+
+
+</style>
+
+</html>
