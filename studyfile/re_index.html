@@ -28,8 +28,9 @@
                 // toSon: '爸爸给你的信息'
                 toSon: '',
                 item_id: '123',
-                lists: ['语文', '数学', '体育'],
-                fontcolor: {'color': '#0B6FDE'}
+                lists: ['一只猪', '在看书', '哼哼叫'],
+                fontcolor: {'color': '#0B6FDE'},
+                input_content: 'zhangsan'
             }
         },
         mounted() {
@@ -47,6 +48,9 @@
             },
             handlecolor(color) {
                 this.fontcolor = {'color': color}
+            },
+            show_alert(e = 'nothing') {
+                alert(e)
             }
 
         },
@@ -57,8 +61,11 @@
 
           <data-by-sql></data-by-sql>
           <div v-for="(item,index) in lists" :key="item">
-          <q-title-line :text="item" :item_id="index" @dodlist="dolist"></q-title-line>
+          <q-title-line :text="item" :item_id="index" @dodlist="dolist" :model-value="item"></q-title-line>
           </div>
+          <click-show-text post-title="Hello1!" @cc="show_alert">点我出提醒</click-show-text>
+<!--          <custom-input v-model="input_content"></custom-input>-->
+
         `
     };
     const app = Vue.createApp(App);
@@ -158,6 +165,7 @@
     // 编辑删除按钮组
     app.component('edit-del-btn-group', {
         props: ['tip', 'item_id'],
+        emits: ['showno','editipt'],
         data() {
             return {
                 isDelete: true,
@@ -199,9 +207,10 @@
         `,
     })
 
-    // 标题+编辑删除按钮
+    // 输入框+编辑删除按钮
     app.component('q-title-line', {
         props: ['text', 'item_id'],
+        emits:['update:text'],
         data() {
             return {
                 item: '输入一段文字',
@@ -238,10 +247,6 @@
                 this.editable = !this.editable
 
             },
-            handleChange() {
-                // alert(123)
-            }
-
         },
         computed() {
 
@@ -251,11 +256,12 @@
             // this.send()
             this.ttt = this.text
         },
+        // el-input 已经不是原生input,被包装了，看el-input参数 https://element-plus.gitee.io/#/zh-CN/component/input
         template: `
           <div style="padding: 10px" v-show="showme" id="item_id">
           <span style="margin-right: 10px">{{ item_id + 1 }}</span>
-          <el-input type="text" style="width: 50%" v-model="this.ttt" placeholder="占位专用小板凳"
-                    :title="text" @change='handleChange' :readonly="this.editable"></el-input>
+          <el-input type="text" style="width: 50%" v-model="ttt" placeholder="占位专用小板凳"
+                    :title="text" :readonly="this.editable"></el-input>
           <edit-del-btn-group :tip="text" :item_id='item_id_btn' @enlarge-text="show_alert"
                               @showno="$emit('dodlist',this.text)" @editipt="editinput"></edit-del-btn-group>
           </div>
@@ -263,6 +269,24 @@
         `,
     })
 
+    app.component('click-show-text', {
+        props: ['postTitle'],
+        template: `
+          <h3 @click="$emit('cc',$event.target.innerText)">
+          <slot>{{ postTitle }}</slot>
+          </h3>
+        `
+    })
+
+    app.component('custom-input', {
+        props: ['modelValue'],
+        template: `
+          <input
+              :value="modelValue"
+              @input="$emit('update:modelValue', $event.target.value)"
+          >
+        `
+    })
 
     app.use(ElementPlus);
     const vm = app.mount('#app');
