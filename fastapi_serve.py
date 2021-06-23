@@ -119,5 +119,17 @@ def read_item(item_id: int, q: Optional[str] = None):
     return {"item_id": item_id, "q": q}
 
 
+from starlette.responses import StreamingResponse
+@app.get("/image/1")
+def show_pic():
+    file_like = open('/Users/silvio/Desktop/IMG_1283.png', mode="rb")
+    return StreamingResponse(file_like, media_type="image/png")
+
+@app.get("/image/2")
+def show_pic():
+    file_like = open('/Users/silvio/Desktop/lifecycle.png', mode="rb")
+    return StreamingResponse(file_like, media_type="image/png")
+
+
 if __name__ == '__main__':
     uvicorn.run(app='fastapi_serve:app', host="0.0.0.0", port=8888, reload=True, debug=True)
