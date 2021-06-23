@@ -56,7 +56,7 @@
                                                    value="#0B6FDE" style="float:right"></h1>
 
           <data-by-sql></data-by-sql>
-          <div v-for="(item,index) in lists">
+          <div v-for="(item,index) in lists" :key="item">
           <q-title-line :text="item" :item_id="index" @dodlist="dolist"></q-title-line>
           </div>
         `
