@@ -130,6 +130,11 @@ def show_pic():
     file_like = open('/Users/silvio/Desktop/lifecycle.png', mode="rb")
     return StreamingResponse(file_like, media_type="image/png")
 
+@app.get("/image/3")
+def show_pic():
+    # windows pic
+    file_like = open(r'C:/Users/sunzhongshan-pc/Desktop/Ö§¸¶±¦ÊÕ¿îÂë.jpg', mode="rb")
+    return StreamingResponse(file_like, media_type="image/jpg")
 
 if __name__ == '__main__':
     uvicorn.run(app='fastapi_serve:app', host="0.0.0.0", port=8888, reload=True, debug=True)

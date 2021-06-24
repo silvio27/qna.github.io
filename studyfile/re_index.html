@@ -31,7 +31,7 @@
                 lists: ['一只猪', '在看书', '哼哼叫'],
                 fontcolor: {'color': '#0B6FDE'},
                 input_content: 'zhangsan',
-                pic_url:'http://0.0.0.0:8888/image/1'
+                pic_url: 'http://0.0.0.0:8888/image/1'
             }
         },
         mounted() {
@@ -53,7 +53,7 @@
             show_alert(e = 'nothing') {
                 alert(e)
             },
-            changepic(){
+            changepic() {
                 this.pic_url = 'http://0.0.0.0:8888/image/2'
                 console.log(this.pic_url)
             }
@@ -188,7 +188,7 @@
         },
         template: `
           <el-button-group>
-          <el-button type="primary" icon="el-icon-edit" @click="handleClick(),$emit('editipt')">编辑</el-button>
+          <el-button :type="this.isDelete ? 'primary' : 'success'" icon="el-icon-edit" @click="handleClick(),$emit('editipt')">{{ this.isDelete ? '编辑' : '完成' }}</el-button>
           <el-button type="info" plain :id="item_id"
                      @click.capture="$emit('enlargeText','子组件的按钮被点击了'+ this.tip)" disabled>
           </el-button>
@@ -228,7 +228,7 @@
                     user: '',
                     region: ''
                 },
-                ttt: '',
+                ttt: this.text,
                 editable: true,
                 cccc: ''
             }
@@ -259,9 +259,7 @@
 
         },
         mounted() {
-            // 输入url
-            // this.send()
-            this.ttt = this.text
+
         },
         // el-input 已经不是原生input,被包装了，看el-input参数 https://element-plus.gitee.io/#/zh-CN/component/input
         template: `

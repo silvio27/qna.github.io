@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>local-comp</title>
+    <script src="https://unpkg.com/vue@next"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <!-- 引入样式 -->
+    <link rel="stylesheet" href="https://unpkg.com/element-plus/lib/theme-chalk/index.css">
+    <!-- 引入组件库 -->
+    <script src="https://unpkg.com/element-plus/lib/index.full.js"></script>
+</head>
+<body>
+<div id="app"></div>
+
+</body>
+<script>
+
+    const bb = {
+        template: `
+            <h3>part B</h3>
+        `
+    }
+
+    const ccc = {
+        template: `
+            <h4>
+                <slot><div style="color: red">没有内容的占位符</div></slot>
+            </h4>
+        `
+    }
+
+    const App = {
+        components: {
+            'cb': bb,
+            'ccc': ccc
+        },
+        template: `
+          <h1>123</h1>
+          <cb></cb>
+          <ccc></ccc>
+        `
+    }
+
+
+    const app = Vue.createApp(App);
+
+
+    app.use(ElementPlus);
+    const vm = app.mount('#app');
+</script>
+</html>
