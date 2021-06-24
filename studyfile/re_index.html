@@ -188,7 +188,9 @@
         },
         template: `
           <el-button-group>
-          <el-button :type="this.isDelete ? 'primary' : 'success'" icon="el-icon-edit" @click="handleClick(),$emit('editipt')">{{ this.isDelete ? '编辑' : '完成' }}</el-button>
+          <el-button :type="this.isDelete ? 'primary' : 'success'" icon="el-icon-edit"
+                     @click="handleClick(),$emit('editipt')">{{ this.isDelete ? '编辑' : '完成' }}
+          </el-button>
           <el-button type="info" plain :id="item_id"
                      @click.capture="$emit('enlargeText','子组件的按钮被点击了'+ this.tip)" disabled>
           </el-button>
@@ -252,7 +254,7 @@
             },
             editinput() {
                 this.editable = !this.editable
-
+                this.$refs.input.focus() // foucs到input中
             },
         },
         computed() {
@@ -266,7 +268,7 @@
           <div style="padding: 10px" v-show="showme" id="item_id">
           <span style="margin-right: 10px">{{ item_id + 1 }}</span>
           <el-input type="text" style="width: 50%" v-model="ttt" placeholder="占位专用小板凳"
-                    :title="text" :readonly="this.editable"></el-input>
+                    :title="ttt" :readonly="this.editable" ref="input"></el-input>
           <edit-del-btn-group :tip="text" :item_id='item_id_btn' @enlarge-text="show_alert"
                               @showno="$emit('dodlist',this.text)" @editipt="editinput"></edit-del-btn-group>
           </div>

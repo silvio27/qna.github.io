@@ -11,33 +11,87 @@
     <script src="https://unpkg.com/element-plus/lib/index.full.js"></script>
 </head>
 <body>
-<div id="app"></div>
+<div style="text-align: center;border: 5px dashed lightblue">
+    <div id="app"></div>
+</div>
+
 
 </body>
 <script>
 
-    const bb = {
+    const showImg = {
+        data() {
+            return {
+                url: 'https://yocto.scrolller.com/1920-s-creekside-cabin-in-northern-california-950-21gvbx2y0r-950x634.jpg'
+            }
+        },
         template: `
-            <h3>part B</h3>
+          <img :src="url" alt="" height="300">
         `
     }
 
     const ccc = {
+        data() {
+            return {
+                lists: [
+                    {
+                        name: '安全',
+                        type: 'success',
+                        tags: ['系统', '数据', '安防', '隐私', '网络']
+                    }, {
+                        name: '分类',
+                        type: 'warning',
+                        tags: ['命名', '分类', '多版本']
+                    }, {
+                        name: '效率',
+                        type: 'primary',
+                        tags: ['统计', '存放', '工具使用']
+                    }, {
+                        name: '资产',
+                        type: 'info',
+                        tags: ['硬件', '软件', '闲置', '机房']
+                    }, {
+                        name: '呈现',
+                        type: 'danger',
+                        tags: ['不一致', '不规范', '错误', '广告']
+                    }
+                ]
+            }
+        },
+        methods: {
+            showalert(e) {
+                alert(e)
+            }
+        },
         template: `
-            <h4>
-                <slot><div style="color: red">没有内容的占位符</div></slot>
-            </h4>
+          <br>
+          <template v-for="(item,index) in lists">
+            <el-popover
+                placement="bottom"
+                width="auto"
+                v-model:visible="visible"
+                trigger="hover"
+            >
+              <template style="text-align: center; margin: 0" v-for="i in item.tags">
+                <el-button size="normal" @click="showalert(item.name +'-'+ i)">{{ i }}</el-button>
+              </template>
+              <template #reference>
+                <el-button :type="item.type" @click="showalert(item.name)">{{ item.name }}</el-button>
+              </template>
+            </el-popover>
+          </template>
+
         `
     }
 
     const App = {
         components: {
-            'cb': bb,
+            'show-img': showImg,
             'ccc': ccc
         },
         template: `
-          <h1>123</h1>
-          <cb></cb>
+          <h3>Picture Picker</h3>
+          <show-img></show-img>
           <ccc></ccc>
         `
     }
