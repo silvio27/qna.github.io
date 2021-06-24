@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="https://unpkg.com/vue@next"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <!-- 引入样式 -->
+    <link rel="stylesheet" href="https://unpkg.com/element-plus/lib/theme-chalk/index.css">
+    <!-- 引入组件库 -->
+    <script src="https://unpkg.com/element-plus/lib/index.full.js"></script>
+    <script src="https://smtpjs.com/v3/smtp.js"></script>
+</head>
+<body>
+<div>
+    <button onclick="sendEmailbyToken('abc_token')">token</button>
+</div>
+</body>
+<script type="text/javascript">
+    //tips https://www.smtpjs.com/
+    // hints https://www.minwt.com/webdesign-dev/js/22122.html
+    function sendEmailbyToken(aa) {
+        Email.send({
+            SecureToken: "a6c57396-3727-4e65-a8d4-f91dc52a179c",
+            To: 'gitmail@yeah.net',
+            From: "sunzhongshanzpmc@yeah.net",
+            Subject: "Idea from Github post",
+            Body: aa
+        }).then(
+            message => alert(message)
+        );
+    }
+
+
+</script>
+</html>

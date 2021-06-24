@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="https://unpkg.com/element-plus/lib/theme-chalk/index.css">
     <!-- 引入组件库 -->
     <script src="https://unpkg.com/element-plus/lib/index.full.js"></script>
+    <script src="https://smtpjs.com/v3/smtp.js"></script>
 </head>
 <body>
 <div style="text-align: center">
@@ -31,7 +32,9 @@
                 lists: ['一只猪', '在看书', '哼哼叫'],
                 fontcolor: {'color': '#0B6FDE'},
                 input_content: 'zhangsan',
-                pic_url: 'http://0.0.0.0:8888/image/1'
+                pic_url: 'http://0.0.0.0:8888/image/1',
+                git_post: '',
+                centerDialogVisible: false
             }
         },
         mounted() {
@@ -56,8 +59,20 @@
             changepic() {
                 this.pic_url = 'http://0.0.0.0:8888/image/2'
                 console.log(this.pic_url)
-            }
-
+            },
+            post_to_git() {
+                alert('发送中，请等待……完成后会显示OK！')
+                console.log(this.git_post)
+                Email.send({
+                    SecureToken: "a6c57396-3727-4e65-a8d4-f91dc52a179c",
+                    To: 'gitmail@yeah.net',
+                    From: "sunzhongshanzpmc@yeah.net",
+                    Subject: "Idea from Github post"+this.git_post,
+                    Body: this.git_post
+                }).then(
+                    message => alert(message),
+                );
+            },
         },
         computed: {},
         template: `
@@ -72,6 +87,8 @@
           <img :src="pic_url" alt="" style="width: 300px" @click="changepic"/>
 
           <!--          <custom-input v-model="input_content"></custom-input>-->
+          <textarea name="" id="" cols="30" rows="10" v-model="git_post"></textarea>
+          <button @click="post_to_git">提交</button>
 
         `
     };
