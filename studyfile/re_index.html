@@ -34,7 +34,8 @@
                 input_content: 'zhangsan',
                 pic_url: 'http://0.0.0.0:8888/image/1',
                 git_post: '',
-                centerDialogVisible: false
+                centerDialogVisible: false,
+                show_add_idea: true
             }
         },
         mounted() {
@@ -60,19 +61,6 @@
                 this.pic_url = 'http://0.0.0.0:8888/image/2'
                 console.log(this.pic_url)
             },
-            post_to_git() {
-                alert('发送中，请等待……完成后会显示OK！')
-                console.log(this.git_post)
-                Email.send({
-                    SecureToken: "a6c57396-3727-4e65-a8d4-f91dc52a179c",
-                    To: 'gitmail@yeah.net',
-                    From: "sunzhongshanzpmc@yeah.net",
-                    Subject: "Idea from Github post"+':'+this.git_post,
-                    Body: this.git_post
-                }).then(
-                    message => alert(message),
-                );
-            },
         },
         computed: {},
         template: `
@@ -83,12 +71,7 @@
           <div v-for="(item,index) in lists" :key="item">
           <q-title-line :text="item" :item_id="index" @dodlist="dolist" :model-value="item"></q-title-line>
           </div>
-          <click-show-text post-title="Hello1!" @cc="show_alert">点我出提醒</click-show-text>
-          <img :src="pic_url" alt="" style="width: 300px" @click="changepic"/>
-
-          <!--          <custom-input v-model="input_content"></custom-input>-->
-          <textarea name="" id="" cols="30" rows="10" v-model="git_post"></textarea>
-          <button @click="post_to_git">提交</button>
+          <text-to-post v-show="show_add_idea"></text-to-post>
 
         `
     };
@@ -134,6 +117,58 @@
 
     // ####################################################################
 
+    // 输入内容并发送到邮箱，待人工审核
+    app.component('text-to-post', {
+        data() {
+            return {
+                content: '',
+                isloading: false,
+                title: '添加新的想法，待人工审核，发送速度较慢，请等待弹窗显示完成！'
+            }
+        },
+        methods: {
+            showalert() {
+                this.isloading = true
+                setInterval(() => {
+                    this.isloading = false
+                    this.content = ''
+                }, 1000)
+            },
+            post_to_git() {
+                if (this.content) {
+                    Email.send({
+                        SecureToken: "a6c57396-3727-4e65-a8d4-f91dc52a179c",
+                        To: 'gitmail@yeah.net',
+                        From: "sunzhongshanzpmc@yeah.net",
+                        Subject: "post_github" + ':' + this.content.substring(0, 10),  // 截取内容前10个字符
+                        Body: this.content
+                    }).then(
+                        function (message) {
+                            if (message === "OK") {
+                                alert('已提交待审核')
+                            } else {
+                                alert(message)
+                            }
+                        },
+                    );
+                    this.content = ''
+                }else{
+                    alert('请输入内容！')
+                }
+            },
+        },
+        template: `
+          <div style="width: 70%;margin: 0 auto;padding: 10px">
+          <el-divider><p>{{ title }}</p></el-divider>
+          <div>
+            <el-input type="textarea" v-model="content" show-word-limit :autosize="{ minRows: 1}" resize="none"
+                      style="width: 90%" :placeholder="title"></el-input>
+            <el-button @click="post_to_git" size="small" type="primary" :loading="isloading">提交</el-button>
+          </div>
+          </div>
+
+        `
+    })
 
     // data_by_sql
     app.component('data-by-sql', {
@@ -293,6 +328,7 @@
         `,
     })
 
+    // 子组件反馈数据到父组件
     app.component('click-show-text', {
         props: ['postTitle'],
         template: `
