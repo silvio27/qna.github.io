@@ -71,7 +71,7 @@
           <div v-for="(item,index) in lists" :key="item">
           <q-title-line :text="item" :item_id="index" @dodlist="dolist" :model-value="item"></q-title-line>
           </div>
-          <text-to-post v-show="show_add_idea"></text-to-post>
+          <text-to-post></text-to-post>
 
         `
     };
@@ -123,7 +123,7 @@
             return {
                 content: '',
                 isloading: false,
-                title: '添加新的想法，待人工审核，发送速度较慢，请等待弹窗显示完成！'
+                title: '添加新的想法，待人工审核，发送速度较慢，请耐心等待！'
             }
         },
         methods: {
@@ -136,23 +136,23 @@
             },
             post_to_git() {
                 if (this.content) {
-                    Email.send({
+                    this.isloading = true
+                    _this = this
+                    email_data = {
                         SecureToken: "a6c57396-3727-4e65-a8d4-f91dc52a179c",
                         To: 'gitmail@yeah.net',
                         From: "sunzhongshanzpmc@yeah.net",
                         Subject: "post_github" + ':' + this.content.substring(0, 10),  // 截取内容前10个字符
                         Body: this.content
-                    }).then(
+                    };
+                    Email.send(email_data).then(
                         function (message) {
-                            if (message === "OK") {
-                                alert('已提交待审核')
-                            } else {
-                                alert(message)
-                            }
-                        },
+                            console.log(message);
+                            _this.isloading = false
+                            _this.content = ''
+                        }
                     );
-                    this.content = ''
-                }else{
+                } else {
                     alert('请输入内容！')
                 }
             },
@@ -169,6 +169,7 @@
 
         `
     })
+
 
     // data_by_sql
     app.component('data-by-sql', {
