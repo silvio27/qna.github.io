@@ -1,4 +1,4 @@
-from PIL import Image, ImageEnhance
+from PIL import Image, ImageEnhance, ImageFilter
 import os, sys
 
 
@@ -64,14 +64,43 @@ def image_resize(path, scale=1):
     im = Image.open(path)
     return im.resize((int(im.size[0] * scale), int(im.size[1] * scale)))
 
+
 # 打包exe直接拖入cmd，获得文件列表
 def get_list():
     aa = sys.argv[1:]
     print(aa)
 
+# 滤镜
+def pic_filter(path):
+    with Image.open(path) as im:
+        # 高斯模糊
+        # im1 = im.filter(ImageFilter.GaussianBlur)
+        # 普通模糊
+        # im2 = im.filter(ImageFilter.BLUR)
+        # 边缘增强
+        # im2 = im.filter(ImageFilter.EDGE_ENHANCE)
+        # 找到边缘
+        im1 = im.filter(ImageFilter.FIND_EDGES)
+        # 浮雕
+        # im.filter(ImageFilter.EMBOSS)
+        # 轮廓
+        # im3 = im.filter(ImageFilter.CONTOUR)
+        # 锐化
+        # im.filter(ImageFilter.SHARPEN)
+        # 平滑
+        # im.filter(ImageFilter.SMOOTH)
+        # 细节
+        # im.filter(ImageFilter.DETAIL)
+        # im1.show()
+        aa = im.histogram()
+        im1.show()
+        print(aa)
+
+
+
 if __name__ == '__main__':
-    # src = 'C:/Users/sunzhongshan-pc/Desktop/image.jpg'
+    # src = 'C:/Users/sunzhongshan-pc/Desktop/image1.jpg'
     # lists = [src]
     # create_thumbnails(lists, 600)
-    get()
-
+    # pic_filetr(src)
+    print('图片处理')
