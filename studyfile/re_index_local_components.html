@@ -27,9 +27,14 @@
                 url1: 'http://localhost:8888/image/'+this.name
             }
         },
+        methods:{
+            showalert(){
+                this.url1 = 'http://localhost:8888/image/支付宝收款码.jpg'
+            }
+        },
         template: `
           <img :src="url" alt="" height="300">
-          <img :src="url1" alt="" height="300">
+          <img :src="url1" alt="" height="300" @click="showalert">
         `
     }
 
@@ -99,7 +104,7 @@
         },
         template: `
           <h3>Picture Picker</h3>
-          <show-img :name="name"></show-img>
+          <show-img :name="name" ></show-img>
           <ccc></ccc>
         `
     }
