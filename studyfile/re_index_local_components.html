@@ -20,13 +20,16 @@
 <script>
 
     const showImg = {
+        props:['name'],
         data() {
             return {
-                url: 'https://yocto.scrolller.com/1920-s-creekside-cabin-in-northern-california-950-21gvbx2y0r-950x634.jpg'
+                url: 'https://yocto.scrolller.com/1920-s-creekside-cabin-in-northern-california-950-21gvbx2y0r-950x634.jpg',
+                url1: 'http://localhost:8888/image/'+this.name
             }
         },
         template: `
           <img :src="url" alt="" height="300">
+          <img :src="url1" alt="" height="300">
         `
     }
 
@@ -89,9 +92,14 @@
             'show-img': showImg,
             'ccc': ccc
         },
+        data (){
+            return {
+                name:'微信收款码.jpg'
+            }
+        },
         template: `
           <h3>Picture Picker</h3>
-          <show-img></show-img>
+          <show-img :name="name"></show-img>
           <ccc></ccc>
         `
     }
