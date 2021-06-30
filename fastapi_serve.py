@@ -22,7 +22,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from starlette.middleware.cors import CORSMiddleware
 import uvicorn
 import time
-from main import connect_db, update_qna_list,dict2json
+from main import connect_db, update_qna_list, dict2json
 
 app = FastAPI()
 
@@ -98,6 +98,7 @@ def add_question(s: str):
     update_qna_list()
     return s
 
+
 @app.get("/message")
 async def root():
     return {
@@ -120,21 +121,35 @@ def read_item(item_id: int, q: Optional[str] = None):
 
 
 from starlette.responses import StreamingResponse
+
+
 @app.get("/image/1")
 def show_pic():
     file_like = open('/Users/silvio/Desktop/IMG_1283.png', mode="rb")
     return StreamingResponse(file_like, media_type="image/png")
+
 
 @app.get("/image/2")
 def show_pic():
     file_like = open('/Users/silvio/Desktop/lifecycle.png', mode="rb")
     return StreamingResponse(file_like, media_type="image/png")
 
+
 @app.get("/image/3")
 def show_pic():
     # windows pic
     file_like = open(r'C:/Users/sunzhongshan-pc/Desktop/支付宝收款码.jpg', mode="rb")
     return StreamingResponse(file_like, media_type="image/jpg")
+
+
+@app.get("/image/{name}")
+def show_pic(name):
+    # windows pic
+    # TODO 如何根据打开的文件夹修改路径，或者在默认路径上？
+    raw_path = 'C:/Users/sunzhongshan-pc/Desktop/origin/'
+    file_like = open(raw_path + name, mode="rb")
+    return StreamingResponse(file_like, media_type="image/jpg")
+
 
 if __name__ == '__main__':
     uvicorn.run(app='fastapi_serve:app', host="0.0.0.0", port=8888, reload=True, debug=True)
