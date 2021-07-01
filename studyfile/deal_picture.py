@@ -17,7 +17,7 @@ def create_thumbnail(path, outpath='', px=128):
     try:
         with Image.open(path) as im:
             im.thumbnail(size)
-            im = im.convert("RGB") # JPG压缩,尺寸更小
+            im = im.convert("RGB")  # JPG压缩,尺寸更小
             im.save(outfile, "JPEG")
             return outfile
     except OSError:
@@ -136,7 +136,7 @@ def from_raw_to_thumbnail(outputfilename='origin_thumbnail', thumbnail_px=2000):
             outfilename = create_thumbnail(inpath, outpath, thumbnail_px)
             datum.append((inpath, outfilename))
         print(f"照片已压缩,共 {count_file_lists} 张")
-        File_W_R(basepath).write_file(str(init_pic_lists(datum)))
+        File_W_R(basepath, filename='dict_data.txt').write_file(str(init_pic_dict(datum)))
     else:
         print("请将照片复制到origin文件夹下,再重新运行软件")
         os.startfile(origin_path)
@@ -172,16 +172,17 @@ class File_W_R:
             f.write(str(self.data))
             print(f'已写入 {self.filename}')
 
-    def show_data(self):
-        print(self.data)
+    def get_data(self):
+        return self.data
 
 
 # 初始化图片列表，添加原始路径，添加压缩图片路径
 def init_pic_lists(datum):
     pic_lists = []
 
-    def add_item(origin_path, thumbnail_path):
+    def add_item(name, origin_path, thumbnail_path):
         pic_item = {
+            'name': name,
             'origin_path': origin_path,
             'thumbnail_path': thumbnail_path,
             'sort_tags': '',
@@ -191,14 +192,48 @@ def init_pic_lists(datum):
         return pic_item
 
     for origin_path, thumbnail_path in datum:
-        pic_lists.append(add_item(origin_path=origin_path, thumbnail_path=thumbnail_path))
+        name = os.path.split(thumbnail_path)[1]
+        pic_lists.append(add_item(name=name, origin_path=origin_path, thumbnail_path=thumbnail_path))
     # print(f'数量：{len(pic_lists)}')
     # print(pic_lists)
     print(f'已创建 {len(pic_lists)} 条记录')
     return pic_lists
 
 
+# 初始化图片字典，id:{}，添加原始路径，添加压缩图片路径
+def init_pic_dict(datum):
+    pic_dict = {}
+
+    def add_item(name, origin_path, thumbnail_path):
+        pic_item = {
+            'name': name,
+            'origin_path': origin_path,
+            'thumbnail_path': thumbnail_path,
+            'sort_tags': '',
+            'update_time': '',
+            'useless': False
+        }
+        return pic_item
+
+    for index, item in enumerate(datum):
+        origin_path, thumbnail_path = item
+        name = os.path.split(thumbnail_path)[1]
+        pic_dict[index] = (add_item(name=name, origin_path=origin_path, thumbnail_path=thumbnail_path))
+    # print(f'数量：{len(pic_lists)}')
+    # print(pic_lists)
+    print(f'已创建 {len(pic_dict)} 条记录')
+    return pic_dict
+
+
 if __name__ == '__main__':
-    from_raw_to_thumbnail()
+    # from_raw_to_thumbnail()
     # TODO 所有照片都会被重新压缩，暂时不做处理，不能保证不会用同名同大小的文件被替换,或者读取exif数据，再讨论
-    input('')
+    # input('')
+    id = 0
+    data = '拖后腿呢好屯'
+    res = File_W_R(base_path='./', filename='dict_data.txt').get_data()
+    res = eval(res)
+    print(res[id])
+    # res[id]['sort_tags'] = data
+    # print('after' + str(res))
+    # File_W_R(base_path='./', filename='dict_data.txt').write_file(str(res))
